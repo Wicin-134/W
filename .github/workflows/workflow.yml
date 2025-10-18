@@ -1,9 +1,9 @@
-name: Deploy to GitHub Pages
+name: Deploy Vite to GitHub Pages
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # Ręczne triggerowanie, bo czasem jesteś leniwy
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,21 +17,24 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules: recursive  # Jeśli masz submoduły, nie komplikuj
+        submodules: recursive
 
-    - name: Setup Pages  # Dla Jekyll lub prostego builda
-      uses: actions/configure-pages@v4
-
-    - name: Build with Jekyll  # Zmień na twój build, jeśli nie Jekyll (np. npm run build dla React/Vue)
-      uses: actions/jekyll-build-pages@v1
+    - name: Setup Node
+      uses: actions/setup-node@v4
       with:
-        source: ./website/  # Twój folder źródłowy
-        destination: ./_site  # Wyjście builda
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci  # Lub bun install, jeśli używasz Bun
+
+    - name: Build Vite
+      run: npm run build  # To wywali dist/ z gotowymi plikami!
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ./_site  # Lub ./website, jeśli bez builda
+        path: ./dist  # Ścieżka do BUILDA, nie source!
 
   deploy:
     environment:
