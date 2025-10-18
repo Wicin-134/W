@@ -1,9 +1,9 @@
 name: Deploy Vite to GitHub Pages (Manual Only)
 
 on:
-  workflow_dispatch:  # 👈 TYLKO RĘCZNE! Brak push trigger
+  workflow_dispatch:
   push:
-    tags: ['v*']     # 👈 LUB tylko na tagach v1.0.0
+    tags: ['v*']
 
 permissions:
   contents: read
@@ -21,15 +21,17 @@ jobs:
       uses: oven-sh/setup-bun@v2
 
     - name: Install dependencies
+      working-directory: ./website 
       run: bun install
 
     - name: Build Vite
+      working-directory: ./website 
       run: bun run build
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ./dist
+        path: ./website/dist  # 
 
   deploy:
     environment:
