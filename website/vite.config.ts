@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  **base: '/W/'**,  // 👈 DODANE! Dla GitHub Pages (nazwa repo)
+  base: '/W/', 
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
