@@ -1,0 +1,45 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Ręczne triggerowanie, bo czasem jesteś leniwy
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive  # Jeśli masz submoduły, nie komplikuj
+
+    - name: Setup Pages  # Dla Jekyll lub prostego builda
+      uses: actions/configure-pages@v4
+
+    - name: Build with Jekyll  # Zmień na twój build, jeśli nie Jekyll (np. npm run build dla React/Vue)
+      uses: actions/jekyll-build-pages@v1
+      with:
+        source: ./website/  # Twój folder źródłowy
+        destination: ./_site  # Wyjście builda
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./_site  # Lub ./website, jeśli bez builda
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
