@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: mode === 'production' ? '/W/' : '/',  // 👈 FIX!
+  base: mode === 'production' ? '/W/' : '/',  // 👈 TO MUSI BYĆ!
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
